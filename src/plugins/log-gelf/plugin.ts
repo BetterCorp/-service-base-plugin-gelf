@@ -1,24 +1,19 @@
-import { ILogger, PluginFeature } from "@bettercorp/service-base/lib/ILib";
+import { CLogger } from "@bettercorp/service-base/lib/ILib";
 import * as Gelf from 'gelf-pro';
 import * as OS from 'os';
-import { Logger as DefaultLogger } from '@bettercorp/service-base/lib/DefaultLogger';
 import { Tools } from '@bettercorp/tools/lib/Tools';
 
-export class Logger implements ILogger {
+export class Logger extends CLogger {
   private _gelf!: any;
-  private features!: PluginFeature;
-  private defaultLogger: ILogger = new DefaultLogger();
-  init (features: PluginFeature): Promise<void> {
+  init (): Promise<void> {
     const self = this;
     return new Promise(async (resolve) => {
-      await self.defaultLogger.init(features);
-      self.features = features;
-      self._gelf = Gelf.setConfig(features.getPluginConfig() || {});
+      self._gelf = Gelf.setConfig(self.appConfig.getPluginConfig<any>(self.pluginName));
       resolve();
     });
   }
   debug (plugin: string, ...data: any[]): void {
-    this.defaultLogger.debug(plugin, data);
+    this.log.debug(plugin, data);
   }
   info (plugin: string, ...data: any[]): void {
     const logData = data[0];
@@ -27,12 +22,12 @@ export class Logger implements ILogger {
       log: 'info',
       hostname: OS.hostname(),
       plugin: plugin.toUpperCase(),
-      workingDir: self.features.cwd,
+      workingDir: self.cwd,
       data: JSON.stringify(logData)
     }, (err: any) => {
       if (!err) return;
-      self.defaultLogger.info(plugin, logData);
-      self.defaultLogger.error(self.features.pluginName, err);
+      self.log.info(plugin, logData);
+      self.log.error(self.pluginName, err);
     });
   }
   warn (plugin: string, ...data: any[]): void {
@@ -42,12 +37,12 @@ export class Logger implements ILogger {
       log: 'warning',
       hostname: OS.hostname(),
       plugin: plugin.toUpperCase(),
-      workingDir: self.features.cwd,
+      workingDir: self.cwd,
       data: JSON.stringify(logData)
     }, (err: any) => {
       if (!err) return;
-      self.defaultLogger.info(plugin, logData);
-      self.defaultLogger.error(self.features.pluginName, err);
+      self.log.info(plugin, logData);
+      self.log.error(self.pluginName, err);
     });
   }
   error (plugin: string, ...data: any[]): void {
@@ -57,12 +52,12 @@ export class Logger implements ILogger {
       log: 'error',
       hostname: OS.hostname(),
       plugin: plugin.toUpperCase(),
-      workingDir: self.features.cwd,
+      workingDir: self.cwd,
       data: JSON.stringify(logData)
     }, (err: any) => {
       if (!err) return;
-      self.defaultLogger.info(plugin, logData);
-      self.defaultLogger.error(self.features.pluginName, err);
+      self.log.info(plugin, logData);
+      self.log.error(self.pluginName, err);
     });
   }
 }
