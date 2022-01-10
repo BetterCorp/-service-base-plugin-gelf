@@ -1,4 +1,4 @@
-import { CLogger } from "@bettercorp/service-base/lib/ILib";
+import { CLogger } from "@bettercorp/service-base/lib/interfaces/logger";
 import * as Gelf from 'gelf-pro';
 import * as OS from 'os';
 import { Tools } from '@bettercorp/tools/lib/Tools';
