@@ -2,7 +2,7 @@
   "name": "@bettercorp/service-base-plugin-log-gelf",
   "license": "AGPL-3.0-only",
   "repository": {
-    "url": "https://github.com/BetterCorp/-service-base-plugin-gelf"
+    "url": "https://github.com/BetterCorp/service-base-plugin-gelf"
   },
   "scripts": {
     "dev": "nodemon --config node_modules/@bettercorp/service-base/build/nodemon.json",
